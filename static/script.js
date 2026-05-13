@@ -1,4 +1,4 @@
-const API_URL = "https://your-render-url.onrender.com/predict";
+const API_URL = "https://phishing-api-6xwr.onrender.com";
 
 async function checkPhishing() {
     const url = document.getElementById("urlInput").value;
