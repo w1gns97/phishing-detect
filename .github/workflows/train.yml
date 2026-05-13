@@ -36,5 +36,6 @@ jobs:
           git add rf_model.pkl feature_names.pkl
 
           git commit -m "Auto-trained model" || echo "No changes"
+          git pull --rebase https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
 
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
