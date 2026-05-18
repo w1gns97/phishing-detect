@@ -2,12 +2,6 @@ name: Train AI Model
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-
-permissions:
-  contents: write
 
 jobs:
   train:
@@ -30,19 +24,6 @@ jobs:
       - name: Train model
         run: python train_model.py
 
-      - name: Commit and Push if Changed
+      - name: Check generated files
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-
-          git add rf_model.pkl feature_names.pkl
-
-          if git diff --staged --quiet; then
-            echo "No model changes detected"
-          else
-            git commit -m "Auto-trained model"
-
-            git pull --rebase https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main
-
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
-          fi
+          ls -lh
