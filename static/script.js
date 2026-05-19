@@ -1,10 +1,16 @@
-const API_URL = "https://phishing-api-6xwr.onrender.com/predict";
+const API_URL =
+    "https://phishing-api-6xwr.onrender.com/predict";
 
 async function checkPhishing() {
 
-    const url = document.getElementById("urlInput").value.trim();
+    const url =
+        document
+        .getElementById("urlInput")
+        .value
+        .trim();
 
-    const resultBox = document.getElementById("result");
+    const resultBox =
+        document.getElementById("result");
 
     // URL 형식 검사
     if (
@@ -13,14 +19,21 @@ async function checkPhishing() {
     ) {
 
         resultBox.innerHTML = `
-            <div style="
-                color:#dc2626;
-                font-weight:600;
-                padding:16px;
-            ">
-                올바른 URL 형식을 입력하세요.<br>
-                (https:// 포함)
+
+            <div class="result-card">
+
+                <p style="
+                    color:#dc2626;
+                    font-weight:600;
+                ">
+
+                    Please enter a valid URL
+                    including https://
+
+                </p>
+
             </div>
+
         `;
 
         return;
@@ -29,22 +42,16 @@ async function checkPhishing() {
     // 로딩 화면
     resultBox.innerHTML = `
 
-        <div style="
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            justify-content:center;
-            padding:30px;
-        ">
+        <div class="result-card">
 
             <div class="loader"></div>
 
             <p style="
+                text-align:center;
                 margin-top:18px;
-                color:#374151;
-                font-weight:500;
+                color:#6b7280;
             ">
-                AI가 URL을 분석중입니다...
+                AI is analyzing the URL...
             </p>
 
         </div>
@@ -53,19 +60,22 @@ async function checkPhishing() {
 
     try {
 
-        const response = await fetch(API_URL, {
+        const response = await fetch(
+            API_URL,
+            {
 
-            method: "POST",
+                method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                headers: {
+                    "Content-Type":
+                    "application/json"
+                },
 
-            body: JSON.stringify({
-                url: url
-            })
-
-        });
+                body: JSON.stringify({
+                    url: url
+                })
+            }
+        );
 
         if (!response.ok) {
             throw new Error("API Error");
@@ -73,14 +83,10 @@ async function checkPhishing() {
 
         const data = await response.json();
 
-        // 결과 색상
         const resultColor =
             data.result.includes("피싱")
             ? "#dc2626"
             : "#16a34a";
-
-        // 위험도 계산
-        const riskPercent = data.phishing_prob;
 
         resultBox.innerHTML = `
 
@@ -88,129 +94,73 @@ async function checkPhishing() {
                 animation:fadeIn 0.4s ease;
             ">
 
-                <h2 style="
-                    margin-bottom:20px;
-                    color:#111827;
-                    font-size:32px;
-                    font-weight:700;
-                ">
-                    분석 결과
-                </h2>
+                <div class="result-card">
 
-                <div style="
-                    background:rgba(255,255,255,0.65);
-                    border-radius:24px;
-                    padding:24px;
-                    margin-bottom:22px;
-                    box-shadow:
-                        0 8px 24px rgba(0,0,0,0.05);
-                ">
+                    <div
+                        class="result-title"
+                        style="
+                            color:${resultColor};
+                        "
+                    >
 
-                    <p style="
-                        font-size:28px;
-                        font-weight:700;
-                        color:${resultColor};
-                        margin-bottom:16px;
-                    ">
                         ${data.result}
-                    </p>
-
-                    <div style="
-                        margin-bottom:16px;
-                    ">
-
-                        <div style="
-                            display:flex;
-                            justify-content:space-between;
-                            margin-bottom:8px;
-                        ">
-                            <span>피싱 위험도</span>
-                            <span>${riskPercent}%</span>
-                        </div>
-
-                        <div style="
-                            width:100%;
-                            height:16px;
-                            background:#e5e7eb;
-                            border-radius:999px;
-                            overflow:hidden;
-                        ">
-
-                            <div style="
-                                width:${riskPercent}%;
-                                height:100%;
-                                background:
-                                    linear-gradient(
-                                        90deg,
-                                        #f59e0b,
-                                        #dc2626
-                                    );
-                                border-radius:999px;
-                                transition:1s ease;
-                            ">
-                            </div>
-
-                        </div>
 
                     </div>
 
-                    <p style="
-                        font-size:18px;
-                        margin-top:18px;
-                        color:#374151;
-                    ">
-                        정상 확률:
-                        <strong>${data.normal_prob}%</strong>
+                    <p>
+                        <strong>
+                            Normal Probability:
+                        </strong>
+
+                        ${data.normal_prob}%
                     </p>
 
                     <p style="
-                        font-size:18px;
-                        margin-top:8px;
-                        color:#374151;
+                        margin-top:10px;
                     ">
-                        피싱 확률:
-                        <strong>${data.phishing_prob}%</strong>
+                        <strong>
+                            Phishing Probability:
+                        </strong>
+
+                        ${data.phishing_prob}%
                     </p>
 
                 </div>
 
-                <!-- 위험 요소 -->
+                <div class="result-card">
 
-                <div style="
-                    background:rgba(255,255,255,0.6);
-                    border-radius:24px;
-                    padding:24px;
-                    margin-bottom:20px;
-                    text-align:left;
-                ">
+                    <div
+                        class="section-title"
+                        style="
+                            color:#dc2626;
+                        "
+                    >
 
-                    <h3 style="
-                        color:#dc2626;
-                        margin-bottom:14px;
-                        font-size:22px;
-                    ">
-                        위험 요소
-                    </h3>
+                        Risk Factors
 
-                    <ul style="
-                        padding-left:20px;
-                        line-height:1.9;
-                    ">
+                    </div>
+
+                    <ul>
 
                         ${data.danger_reasons.length > 0
 
-                            ? data.danger_reasons.map(item => `
-                                <li style="
-                                    color:#b91c1c;
-                                    font-weight:500;
-                                ">
-                                    ${item}
-                                </li>
-                            `).join("")
+                            ? data.danger_reasons.map(
+                                item => `
+                                    <li style="
+                                        color:#b91c1c;
+                                    ">
+                                        ${item}
+                                    </li>
+                                `
+                            ).join("")
 
-                            : `
-                                <li style="color:#16a34a;">
-                                    위험 요소가 발견되지 않았습니다
+                            :
+
+                            `
+                                <li style="
+                                    color:#16a34a;
+                                ">
+                                    No dangerous factors detected
                                 </li>
                             `
                         }
@@ -219,65 +169,48 @@ async function checkPhishing() {
 
                 </div>
 
-                <!-- 정상 요소 -->
+                <div class="result-card">
 
-                <div style="
-                    background:rgba(255,255,255,0.6);
-                    border-radius:24px;
-                    padding:24px;
-                    margin-bottom:20px;
-                    text-align:left;
-                ">
+                    <div
+                        class="section-title"
+                        style="
+                            color:#16a34a;
+                        "
+                    >
 
-                    <h3 style="
-                        color:#16a34a;
-                        margin-bottom:14px;
-                        font-size:22px;
-                    ">
-                        정상 요소
-                    </h3>
+                        Safe Factors
 
-                    <ul style="
-                        padding-left:20px;
-                        line-height:1.9;
-                    ">
+                    </div>
 
-                        ${data.safe_reasons.map(item => `
-                            <li style="
-                                color:#15803d;
-                                font-weight:500;
-                            ">
-                                ${item}
-                            </li>
-                        `).join("")}
+                    <ul>
+
+                        ${data.safe_reasons.map(
+                            item => `
+                                <li style="
+                                    color:#15803d;
+                                ">
+                                    ${item}
+                                </li>
+                            `
+                        ).join("")}
 
                     </ul>
 
                 </div>
 
-                <!-- 그래프 -->
+                <div class="result-card">
 
-                <div style="
-                    background:rgba(255,255,255,0.6);
-                    border-radius:24px;
-                    padding:24px;
-                ">
+                    <div class="section-title">
 
-                    <h3 style="
-                        margin-bottom:20px;
-                        font-size:22px;
-                        color:#111827;
-                    ">
-                        URL 특징 분석 시각화
-                    </h3>
+                        URL Feature Analysis
+
+                    </div>
 
                     <img
-                        src="data:image/png;base64,${data.feature_plot}"
-                        width="100%"
-                        style="
-                            border-radius:18px;
-                            box-shadow:
-                                0 10px 20px rgba(0,0,0,0.06);
+                        class="graph-img"
+                        src="
+                            data:image/png;base64,
+                            ${data.feature_plot}
                         "
                     >
 
@@ -293,17 +226,20 @@ async function checkPhishing() {
 
         resultBox.innerHTML = `
 
-            <div style="
-                padding:24px;
-                color:#dc2626;
-                font-weight:600;
-                line-height:1.8;
-            ">
+            <div class="result-card">
 
-                서버 연결 실패<br>
+                <p style="
+                    color:#dc2626;
+                    font-weight:600;
+                    line-height:1.8;
+                ">
 
-                Render 무료 서버는 처음 요청 시
-                30~60초 정도 걸릴 수 있습니다.
+                    Failed to connect to server.<br>
+
+                    Render free server may take
+                    30~60 seconds on first request.
+
+                </p>
 
             </div>
 
