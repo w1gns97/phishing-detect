@@ -13,23 +13,23 @@ model = joblib.load(os.path.join(BASE_DIR, "rf_model.pkl"))
 feature_names = joblib.load(os.path.join(BASE_DIR, "feature_names.pkl"))
 
 FEATURE_DESCRIPTIONS = {
-    "having_IPhaving_IP_Address": "IP 주소 사용",
-    "URLURL_Length": "긴 URL 길이",
-    "Shortining_Service": "단축 URL 사용",
-    "having_At_Symbol": "@ 기호 포함",
-    "double_slash_redirecting": "// 리다이렉트 사용",
-    "Prefix_Suffix": "하이픈(-) 포함 도메인",
-    "having_Sub_Domain": "과도한 서브도메인",
-    "SSLfinal_State": "HTTPS 보안 사용",
-    "Domain_registeration_length": "짧은 도메인 이름",
-    "HTTPS_token": "도메인 내 https 문자열 포함",
-    "Request_URL": "긴 요청 경로",
-    "URL_of_Anchor": "비정상 Anchor 사용",
-    "Links_in_tags": "특수 문자 포함",
-    "SFH": "로그인 관련 키워드 포함",
-    "Submitting_to_email": "이메일 전송 사용",
-    "Redirect": "과도한 리다이렉트",
-    "Iframe": "iframe 관련 요소 포함"
+    "having_IPhaving_IP_Address": "IP Address Usage",
+    "URLURL_Length": "Long URL Length",
+    "Shortining_Service": "Shortened URL",
+    "having_At_Symbol": "@ Symbol Usage",
+    "double_slash_redirecting": "Redirect // Usage",
+    "Prefix_Suffix": "Hyphen In Domain",
+    "having_Sub_Domain": "Too Many Subdomains",
+    "SSLfinal_State": "HTTPS Security",
+    "Domain_registeration_length": "Short Domain Name",
+    "HTTPS_token": "Fake HTTPS In Domain",
+    "Request_URL": "Long Request Path",
+    "URL_of_Anchor": "Abnormal Anchor",
+    "Links_in_tags": "Special Characters",
+    "SFH": "Login Keyword",
+    "Submitting_to_email": "Email Submission",
+    "Redirect": "Multiple Redirects",
+    "Iframe": "Iframe Related"
 }
 
 def create_visualization(features):
@@ -47,31 +47,48 @@ def create_visualization(features):
             values.append(value)
 
             if value == -1:
-                colors.append("red")
+                colors.append("#ef4444")
             else:
-                colors.append("green")
+                colors.append("#22c55e")
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(9, 5))
 
-    plt.barh(labels, values, color=colors)
+    bars = plt.barh(
+        labels,
+        values,
+        color=colors
+    )
 
-    plt.xlim(-1.5, 1.5)
+    plt.xlim(-1.2, 1.2)
 
-    plt.xlabel("위험도 분석")
+    plt.xlabel("Risk Score")
 
-    plt.title("URL 특징 분석 결과")
+    plt.title("URL Security Analysis")
+
+    plt.grid(
+        axis='x',
+        linestyle='--',
+        alpha=0.3
+    )
 
     plt.tight_layout()
 
     buffer = BytesIO()
 
-    plt.savefig(buffer, format="png")
+    plt.savefig(
+        buffer,
+        format="png",
+        bbox_inches="tight",
+        dpi=150
+    )
 
     plt.close()
 
     buffer.seek(0)
 
-    return base64.b64encode(buffer.getvalue()).decode()
+    return base64.b64encode(
+        buffer.getvalue()
+    ).decode()
 
 def generate_reason(features):
 
